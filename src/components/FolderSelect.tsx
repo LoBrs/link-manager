@@ -1,13 +1,10 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Plus } from 'lucide-react';
 
 interface Folder {
   id: string;
   name: string;
-  description?: string;
-  children?: Folder[];
   _count?: { links: number };
 }
 
@@ -29,10 +26,15 @@ export default function FolderSelect({
   const [error, setError] = useState<string | null>(null);
   const [localSelectedId, setLocalSelectedId] = useState(selectedFolderId);
 
-  // Mettre à jour la sélection locale quand la prop change
   useEffect(() => {
     setLocalSelectedId(selectedFolderId);
   }, [selectedFolderId]);
+
+  const resetCreationState = () => {
+    setIsCreating(false);
+    setNewFolderName('');
+    setError(null);
+  };
 
   const handleCreateFolder = async () => {
     if (!newFolderName.trim()) {
@@ -49,13 +51,11 @@ export default function FolderSelect({
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to create folder');
+        throw new Error(data.error || 'Échec de la création du dossier');
       }
 
       const newFolder = await response.json();
-      setNewFolderName('');
-      setIsCreating(false);
-      setError(null);
+      resetCreationState();
       setLocalSelectedId(newFolder.id);
       onSelect(newFolder.id);
       
@@ -80,25 +80,19 @@ export default function FolderSelect({
             value={newFolderName}
             onChange={(e) => setNewFolderName(e.target.value)}
             placeholder="Nom de la catégorie"
-            className="px-2 py-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-3 py-2"
+            className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 px-3 py-2"
             onKeyDown={(e) => {
               if (e.key === 'Enter') {
                 e.preventDefault();
                 handleCreateFolder();
               } else if (e.key === 'Escape') {
-                setIsCreating(false);
-                setNewFolderName('');
-                setError(null);
+                resetCreationState();
               }
             }}
             autoFocus
           />
           <button
-            onClick={() => {
-              setIsCreating(false);
-              setNewFolderName('');
-              setError(null);
-            }}
+            onClick={resetCreationState}
             className="px-2 py-1 text-sm text-gray-500 hover:text-gray-700"
           >
             Annuler

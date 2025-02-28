@@ -4,7 +4,6 @@ import { ChevronRight, ChevronDown, Folder as FolderIcon, Plus } from 'lucide-re
 interface Folder {
   id: string;
   name: string;
-  description?: string;
   children?: Folder[];
   _count?: { links: number };
 }
@@ -96,7 +95,7 @@ export default function FolderTree({ folders, selectedFolderId, onSelect, rootLi
 
       if (!response.ok) {
         const data = await response.json();
-        throw new Error(data.error || 'Failed to create folder');
+        throw new Error(data.error || 'Échec de la création du dossier');
       }
 
       const newFolder = await response.json();
@@ -110,6 +109,12 @@ export default function FolderTree({ folders, selectedFolderId, onSelect, rootLi
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Erreur lors de la création de la catégorie');
     }
+  };
+
+  const resetCreationState = () => {
+    setIsCreating(false);
+    setNewFolderName('');
+    setError(null);
   };
 
   return (
@@ -158,26 +163,21 @@ export default function FolderTree({ folders, selectedFolderId, onSelect, rootLi
                 value={newFolderName}
                 onChange={(e) => setNewFolderName(e.target.value)}
                 placeholder="Nom de la catégorie"
-                className="px-2 py-1 block w-full text-sm rounded-md border border-gray-300 focus:border-indigo-500 focus:ring-indigo-500"
+                className="block w-full text-sm rounded-md border-gray-300 focus:border-indigo-500 focus:ring-indigo-500 px-3 py-2"
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     e.preventDefault();
                     handleCreateFolder();
                   } else if (e.key === 'Escape') {
-                    setIsCreating(false);
-                    setNewFolderName('');
-                    setError(null);
+                    resetCreationState();
                   }
                 }}
+                autoFocus
               />
             </div>
             <div className="flex justify-end space-x-2">
               <button
-                onClick={() => {
-                  setIsCreating(false);
-                  setNewFolderName('');
-                  setError(null);
-                }}
+                onClick={resetCreationState}
                 className="text-xs text-gray-500 hover:text-gray-700"
               >
                 Annuler
