@@ -38,8 +38,8 @@ CREATE TABLE "Visit" (
     "linkId" TEXT NOT NULL,
     "ip" TEXT NOT NULL,
     "userAgent" TEXT NOT NULL,
-    "url" TEXT,
     "referrer" TEXT,
+    "language" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Visit_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );
