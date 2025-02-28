@@ -30,9 +30,7 @@ export async function POST(
           userAgent: data.userAgent || 'unknown',
           url: data.url,
           referrer: data.referrer,
-          language: data.language,
-          screenResolution: data.screenResolution,
-          windowSize: data.windowSize
+          language: data.language
         }
       });
     }

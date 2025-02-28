@@ -40,9 +40,6 @@ CREATE TABLE "Visit" (
     "userAgent" TEXT NOT NULL,
     "url" TEXT,
     "referrer" TEXT,
-    "language" TEXT,
-    "screenResolution" TEXT,
-    "windowSize" TEXT,
     "createdAt" DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
     CONSTRAINT "Visit_linkId_fkey" FOREIGN KEY ("linkId") REFERENCES "Link" ("id") ON DELETE CASCADE ON UPDATE CASCADE
 );

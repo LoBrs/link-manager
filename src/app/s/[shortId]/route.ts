@@ -8,11 +8,10 @@ export async function GET(
 ) {
   try {
     const headersList = headers();
-    const ip = request.ip ?? headersList.get('x-forwarded-for') ?? 'unknown';
-    const userAgent = headersList.get('user-agent') ?? 'unknown';
+    const ip = request.ip ?? headersList.get('x-forwarded-for');
+    const userAgent = headersList.get('user-agent');
     const referer = headersList.get('referer');
     const language = headersList.get('accept-language');
-    const url = request.url;
 
     // Récupérer le lien à partir du shortId
     const link = await prisma.link.findUnique({
@@ -27,9 +26,8 @@ export async function GET(
     await prisma.visit.create({
       data: {
         linkId: link.id,
-        ip,
-        userAgent,
-        url,
+        ip: ip ?? null,
+        userAgent: userAgent ?? null,
         referrer: referer ?? null,
         language: language ?? null,
       }

@@ -177,32 +177,6 @@ export default function Home() {
     }
   };
 
-  const handleLinkClick = async (id: string) => {
-    try {
-      const response = await fetch(`/api/links/${id}/visit`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          url: window.location.href,
-          referrer: document.referrer,
-          userAgent: navigator.userAgent,
-          language: navigator.language,
-          screenResolution: `${window.screen.width}x${window.screen.height}`,
-          windowSize: `${window.innerWidth}x${window.innerHeight}`
-        })
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to record visit');
-      }
-
-      // Mettre à jour la liste des liens pour afficher le nouveau nombre de visites
-      fetchLinks();
-    } catch (err) {
-      console.error('Error recording visit:', err);
-    }
-  };
-
   if (!session) {
     return (
       <div className="flex items-center justify-center min-h-screen">
@@ -273,6 +247,7 @@ export default function Home() {
                         <h3 className="text-sm font-medium text-gray-900 truncate">
                           {link.title || link.url}
                         </h3>
+                        <CopyShortUrl shortUrl={link.shortUrl} />
                         {link.description && (
                           <span className="text-sm text-gray-500 truncate hidden sm:inline">
                             • {link.description}
@@ -285,7 +260,6 @@ export default function Home() {
                             href={link.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            onClick={() => handleLinkClick(link.id)}
                             className="truncate hover:text-indigo-600 hover:underline flex items-center"
                           >
                             {link.url}
@@ -314,7 +288,6 @@ export default function Home() {
                       </div>
                     </div>
                     <div className="flex items-center space-x-2 flex-shrink-0">
-                      <CopyShortUrl shortUrl={link.shortUrl} />
                       <button
                         onClick={() => setShowingQRCode(link)}
                         className="p-1 text-gray-400 hover:text-indigo-600 rounded-full hover:bg-gray-100"

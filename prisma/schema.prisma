@@ -54,9 +54,8 @@ model Folder {
 model Visit {
   id        String   @id @default(cuid())
   linkId    String
-  ip        String
-  userAgent String
-  url       String?
+  ip        String?
+  userAgent String?
   referrer  String?
   language  String?
   createdAt DateTime @default(now())

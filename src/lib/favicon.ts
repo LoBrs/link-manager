@@ -23,7 +23,7 @@ export async function getFavicon(url: string): Promise<string> {
     }
 
     // Utiliser directement l'API Google Favicons
-    return `https://s2.googleusercontent.com/s2/favicons?domain=${host}`;
+    return `https://s2.googleusercontent.com/s2/favicons?domain=${host}&sz=32`;
   } catch (error) {
     console.error('Error getting favicon:', error);
     return '/images/default-favicon.png';
